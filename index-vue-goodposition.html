@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue best Pratice</title>
+
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.0/vue.js'></script>
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0-9/css/all.css'/>
+
+
+</head>
+<body>
+
+    <div id="app">
+        <h1> hi jared</h1>
+        <input type="text" v-model='inputing'>
+
+        <input type="text" v-model='itest'>
+    </div>
+
+
+    <div class="note">
+        <ul>
+            <li><h3>watch盡量使用物件型別、不要watch執行與created執行一樣事情，watch可使用immediate: true</h3></li>
+            <li><h3>v-for 必給key</h3></li>
+            <li><h3>PascalCase 或者 kebab-case作為vue單檔模組檔案名稱</h3></li>
+            <li><h3>pros宣告:使用駝峰，網頁樣板綁定使用kabab-case</h3></li>
+            <li><h3>不要 v-for + v-if，正確姿勢，filter過再把資料用上。</h3></li>
+            <li><h3>Actions一定要給promise回傳，確保非同步能依序進行。</h3></li>
+        </ul>
+    </div>
+
+    <script>
+
+
+        let vm = new Vue({                      
+            el:'#app',
+            data:{
+             
+                inputing:'nanan',
+
+                itest:'wazzup'
+            },
+
+            watch:{
+                inputing:{
+                    immediate: true,
+                    handler(){
+                        this.do();
+                    }
+                },
+                itest:{
+                  handler(value, v2){
+                      console.log(value);
+                  },
+                },
+            },
+            methods:{
+                
+                do(){
+                    console.log('123')
+                },
+            },
+            created(){
+                // this.do();
+            },
+
+        })
+    </script>
+
+
+</body>
+</html>

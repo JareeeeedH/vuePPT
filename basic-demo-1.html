@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>vue.js, router</title>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.js'></script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/vue-router/3.4.5/vue-router.js'></script>
+</head>
+
+<style>
+  .toGrey{
+    background-color: grey;
+  }
+</style>
+<body>
+
+  <div id="app">
+
+    <button @click='pushHandler'> push </button>
+
+    <h1 id='t'>Title</h1>
+
+    <router-link to="/home">home</router-link>
+    <br>
+    <router-link to="/foo">Go to Foo</router-link>
+    <br>
+    <router-link to="/bar">Go to Bar</router-link>
+
+    <br>
+    <router-link to="/user/aaa">user: aaa</router-link>
+    <router-link to="/user/bbb">user: bbb</router-link>
+    <router-link to="/user/ccc">user: ccc</router-link>
+
+
+
+    <hr>
+    <router-view></router-view>
+
+
+  </div>
+
+
+  <script type='module'>
+
+
+    const home = {template: `
+     <div>
+      <h1>HOME</h1>
+        {{ this.$route.params.pathMatch }}  
+      </div>
+      `,
+    };
+
+    const Foo = { 
+      template: '<div>foo</div>'};
+
+    const Bar = { 
+      template: '<div>bar</div>'};
+
+    const User = {
+      template:`<div class='toGrey'>
+
+          <h1>User Page</h1>  
+          <h3> params: Id: {{ $route.params }}</h3>
+          <h3> Query: {{ $route.query }}</h3>
+
+        </div>`,
+
+      mounted(){
+        setTimeout(()=>{
+          alert('API')
+        }, 200)
+      },
+
+      beforeRouteUpdate(to, from, next) {
+
+        console.log('beforeRouteUpdate')
+        console.log(to, from);
+        next();
+
+      }
+    }
+
+    const routes = [
+      { path: '/home', component: home, meta: { requiresAuth: true }},
+      { path: '/foo', component: Foo, name:'foo' },
+      { path: '/bar', component: Bar, name:'bar' },
+
+      // 以下路由整合示範;
+      // { path: '/user/:id', component: User },
+      // { path: '/user/profile/:id', component: User },
+
+      { path: '/user/(profile)?/:id', component: User, name: 'user' },
+      { path: '*', component: home },
+
+    ];
+
+    const router = new VueRouter({
+      routes
+    })
+
+
+    router.beforeEach((to, from, next) => {
+      next();
+
+    })
+
+
+
+    
+    let vm = new Vue({
+      el:'#app',
+      data:{
+        user: 'jared',
+        password: 999,
+      },
+
+      router,
+
+      computed: {
+        username() {
+          return this.$route.params.id
+        }
+      },
+
+      watch: {
+        $route(to, from) {
+
+          console.log('watch rout change !')
+          console.log(this.$router);
+          console.log(this.$route);
+          
+        }
+      },
+
+      methods:{
+        pushHandler(){
+
+          router.push({ name: 'user', query: { plan: 'private' },  params: { id: 123 }})
+
+        },
+      },
+
+      created(){
+        // console.log(this.$router);
+        // console.log(this.$route);
+      },
+    })
+
+
+  </script>
+  
+</body>
+</html>
+     
